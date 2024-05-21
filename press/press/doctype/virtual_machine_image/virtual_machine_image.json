@@ -1,0 +1,151 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-08-30 12:16:32.761458",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "virtual_machine",
+  "instance_id",
+  "image_id",
+  "snapshot_id",
+  "status",
+  "size",
+  "column_break_5",
+  "cluster",
+  "region",
+  "platform",
+  "series",
+  "copied_from",
+  "credentials_section",
+  "mariadb_root_password"
+ ],
+ "fields": [
+  {
+   "fieldname": "virtual_machine",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Virtual Machine",
+   "options": "Virtual Machine",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "platform",
+   "fieldtype": "Data",
+   "label": "Platform",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "cluster.region",
+   "fieldname": "region",
+   "fieldtype": "Link",
+   "label": "Region",
+   "options": "Cloud Region",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Pending\nAvailable\nUnavailable",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "virtual_machine.series",
+   "fieldname": "series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "n\nf\nm\nc\np\ne\nr",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "size",
+   "fieldtype": "Int",
+   "label": "Size",
+   "read_only": 1
+  },
+  {
+   "fieldname": "credentials_section",
+   "fieldtype": "Section Break",
+   "label": "Credentials"
+  },
+  {
+   "fieldname": "mariadb_root_password",
+   "fieldtype": "Password",
+   "label": "MariaDB Root Password",
+   "read_only": 1
+  },
+  {
+   "fieldname": "copied_from",
+   "fieldtype": "Link",
+   "label": "Copied From",
+   "options": "Virtual Machine Image",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "virtual_machine.cluster",
+   "fetch_if_empty": 1,
+   "fieldname": "cluster",
+   "fieldtype": "Link",
+   "label": "Cluster",
+   "options": "Cluster",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "virtual_machine.instance_id",
+   "fieldname": "instance_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Instance ID",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "image_id",
+   "fieldtype": "Data",
+   "label": "Image ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "snapshot_id",
+   "fieldtype": "Data",
+   "label": "Snapshot ID",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-12-11 18:02:20.719052",
+ "modified_by": "Administrator",
+ "module": "Press",
+ "name": "Virtual Machine Image",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "virtual_machine"
+}

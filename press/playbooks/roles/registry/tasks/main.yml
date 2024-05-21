@@ -1,0 +1,42 @@
+---
+- name: Create Registry Directory
+  become: yes
+  become_user: frappe
+  file:
+    dest: /home/frappe/registry
+    state: directory
+
+- name: Create Registry Data Directory
+  become: yes
+  become_user: frappe
+  file:
+    dest: /home/frappe/registry/data
+    state: directory
+
+- name: Stop and Remove old Docker Registry UI Container
+  shell: docker stop registry-ui; docker rm registry-ui
+  ignore_errors: true
+
+- name: Stop and Remove old Docker Registry Container
+  shell: docker stop registry; docker rm registry
+  ignore_errors: true
+
+- name: Start Docker Registry
+  script: files/registry.sh
+
+- name: Start Docker Registry UI
+  script: files/registry-ui.sh
+
+- name: Setup Registry Authentication
+  become: yes
+  become_user: frappe
+  command: 'htpasswd -Bbc registry.htpasswd {{ registry_username }} {{ registry_password }}'
+  args:
+    chdir: /home/frappe/registry
+
+- name: Setup NGINX for Registry
+  become: yes
+  become_user: frappe
+  command: /home/frappe/agent/env/bin/agent setup registry
+  args:
+    chdir: /home/frappe/agent

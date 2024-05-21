@@ -1,0 +1,177 @@
+name: Press Tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '*'
+  workflow_dispatch:
+
+env:
+  DB_NAME: test_frappe
+  DB_USER: test_frappe
+  DB_PASSWORD: test_frappe
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    name: 'Black and Flake8'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install flake8 git+https://github.com/adityahase/black
+      - name: Black Test
+        run: |
+          black --check ${GITHUB_WORKSPACE}/press/press
+      - name: Flake8 Test
+        run: |
+          flake8 --ignore W191,E501,W503 ${GITHUB_WORKSPACE}/press/press
+
+  semgrep:
+    name: Semgrep Rules
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Run Semgrep rules
+        run: |
+          pip install semgrep==1.32
+          semgrep ci --config ./press-semgrep-rules.yml --config r/python.lang.correctness
+
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        container: [1, 2]
+
+    name: Server
+
+    services:
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+
+    steps:
+      - name: Remove unnecessary files
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
+      - name: Clone
+        uses: actions/checkout@v3
+
+      - name: Check for valid Python & Merge Conflicts
+        run: |
+          python -m compileall -q -f "${GITHUB_WORKSPACE}"
+          if grep -lr --exclude-dir=node_modules "^<<<<<<< " "${GITHUB_WORKSPACE}"
+              then echo "Found merge conflicts"
+              exit 1
+          fi
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+          check-latest: true
+
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/*requirements.txt', '**/pyproject.toml', '**/setup.py', '**/setup.cfg') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: 'echo "::set-output name=dir::$(yarn cache dir)"'
+
+      - uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install
+        run: bash ${GITHUB_WORKSPACE}/.github/helper/install.sh
+
+      - name: Add to Hosts
+        run: |
+          echo "127.0.0.1 test_site" | sudo tee -a /etc/hosts
+
+      - name: Expose GitHub Runtime
+        uses: crazy-max/ghaction-github-runtime@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          install: true
+
+      - name: Run Tests
+        working-directory: /home/runner/frappe-bench
+        run: |
+          bench --site test_site set-config allow_tests true
+          bench --site test_site run-parallel-tests --app press --with-coverage --total-builds 2 --build-number ${{ matrix.container }}
+        env:
+          TYPE: server
+
+      - name: Upload coverage reports to Codecov
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-${{ matrix.container }}
+          path: /home/runner/frappe-bench/sites/coverage.xml
+        if: always()
+
+      - name: Upload bench start logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: bench-start-logs
+          path: /home/runner/frappe-bench/bench_start_logs.txt
+        if: always()
+
+  coverage:
+    name: Coverage Wrap Up
+    if: always()
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone
+        uses: actions/checkout@v3
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Upload coverage data
+        uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: false
+          verbose: true

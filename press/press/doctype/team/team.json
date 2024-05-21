@@ -1,0 +1,507 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2022-01-28 20:07:37.989538",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "enabled",
+  "team_title",
+  "user",
+  "account_request",
+  "partner_email",
+  "billing_team",
+  "parent_team",
+  "column_break_wejg",
+  "erpnext_partner",
+  "is_developer",
+  "is_saas_user",
+  "is_code_server_user",
+  "free_account",
+  "via_erpnext",
+  "default_to_new_dashboard",
+  "section_break_6",
+  "team_members",
+  "section_break_tdm9",
+  "child_team_members",
+  "section_break_9",
+  "send_notifications",
+  "column_break_9",
+  "notify_email",
+  "last_used_team",
+  "subscription_details_section",
+  "stripe_customer_id",
+  "country",
+  "currency",
+  "payment_mode",
+  "default_payment_method",
+  "billing_name",
+  "billing_address",
+  "free_credits_allocated",
+  "column_break_12",
+  "address_html",
+  "custom_apps_section",
+  "github_access_token",
+  "partner_section",
+  "partner_referral_code",
+  "partnership_date",
+  "column_break_ppov",
+  "frappe_partnership_date",
+  "feature_flags_section",
+  "referrer_id",
+  "ssh_access_enabled",
+  "skip_backups",
+  "column_break_31",
+  "database_access_enabled",
+  "razorpay_enabled",
+  "servers_enabled",
+  "code_servers_enabled",
+  "self_hosted_servers_enabled",
+  "security_portal_enabled",
+  "benches_enabled",
+  "section_break_28",
+  "communication_emails",
+  "discounts_section",
+  "discounts",
+  "is_us_eu"
+ ],
+ "fields": [
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User",
+   "search_index": 1
+  },
+  {
+   "fieldname": "team_members",
+   "fieldtype": "Table",
+   "label": "Team Members",
+   "options": "Team Member"
+  },
+  {
+   "default": "0",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "subscription_details_section",
+   "fieldtype": "Section Break",
+   "label": "Subscription Details"
+  },
+  {
+   "fieldname": "stripe_customer_id",
+   "fieldtype": "Data",
+   "label": "Stripe Customer ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Country",
+   "options": "Country"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "default_payment_method",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Default Payment Method",
+   "options": "Stripe Payment Method"
+  },
+  {
+   "default": "0",
+   "description": "If checked, this user can Transfer credits from ERPNext.com",
+   "fieldname": "erpnext_partner",
+   "fieldtype": "Check",
+   "in_standard_filter": 1,
+   "label": "ERPNext Partner",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "description": "If checked, usage data will not be sent to Stripe and they won't be charged",
+   "fieldname": "free_account",
+   "fieldtype": "Check",
+   "in_standard_filter": 1,
+   "label": "Free Account",
+   "search_index": 1
+  },
+  {
+   "fieldname": "address_html",
+   "fieldtype": "HTML",
+   "label": "Address HTML"
+  },
+  {
+   "fieldname": "column_break_12",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "free_credits_allocated",
+   "fieldtype": "Check",
+   "label": "Free Credits Allocated"
+  },
+  {
+   "fieldname": "billing_address",
+   "fieldtype": "Link",
+   "label": "Billing Address",
+   "options": "Address"
+  },
+  {
+   "fieldname": "github_access_token",
+   "fieldtype": "Data",
+   "label": "GitHub Access Token"
+  },
+  {
+   "fieldname": "feature_flags_section",
+   "fieldtype": "Section Break",
+   "label": "Feature Flags"
+  },
+  {
+   "fieldname": "custom_apps_section",
+   "fieldtype": "Section Break",
+   "label": "Custom Apps"
+  },
+  {
+   "fieldname": "billing_name",
+   "fieldtype": "Data",
+   "label": "Billing Name"
+  },
+  {
+   "default": "0",
+   "description": "Enabled if this account was created via the ERPNext signup form",
+   "fieldname": "via_erpnext",
+   "fieldtype": "Check",
+   "label": "Via ERPNext",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "description": "A developer creates app(s) for the marketplace",
+   "fieldname": "is_developer",
+   "fieldtype": "Check",
+   "in_standard_filter": 1,
+   "label": "Is Developer"
+  },
+  {
+   "fieldname": "payment_mode",
+   "fieldtype": "Select",
+   "label": "Payment Mode",
+   "options": "\nCard\nPrepaid Credits\nPartner Credits\nPaid By Partner"
+  },
+  {
+   "depends_on": "eval:doc.send_notifications;",
+   "fetch_from": "user.email",
+   "fetch_if_empty": 1,
+   "fieldname": "notify_email",
+   "fieldtype": "Data",
+   "label": "Notify Email",
+   "mandatory_depends_on": "eval:doc.send_notifications;"
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_9",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "send_notifications",
+   "fieldtype": "Check",
+   "label": "Send Notifications"
+  },
+  {
+   "fieldname": "referrer_id",
+   "fieldtype": "Data",
+   "label": "Referrer ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "communication_emails",
+   "fieldtype": "Table",
+   "label": "Communication Emails",
+   "options": "Communication Email"
+  },
+  {
+   "fieldname": "section_break_28",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "ssh_access_enabled",
+   "fieldtype": "Check",
+   "label": "SSH Access Enabled"
+  },
+  {
+   "default": "1",
+   "fieldname": "database_access_enabled",
+   "fieldtype": "Check",
+   "label": "Database Access Enabled"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "discounts_section",
+   "fieldtype": "Section Break",
+   "label": "Discounts"
+  },
+  {
+   "fieldname": "discounts",
+   "fieldtype": "Table",
+   "label": "Discounts",
+   "options": "Invoice Discount"
+  },
+  {
+   "fieldname": "partner_email",
+   "fieldtype": "Data",
+   "label": "Partner Email"
+  },
+  {
+   "fieldname": "column_break_31",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "razorpay_enabled",
+   "fieldtype": "Check",
+   "label": "RazorPay Enabled"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_us_eu",
+   "fieldtype": "Check",
+   "label": "Is US / EU"
+  },
+  {
+   "default": "0",
+   "fieldname": "servers_enabled",
+   "fieldtype": "Check",
+   "label": "Servers Enabled"
+  },
+  {
+   "fieldname": "last_used_team",
+   "fieldtype": "Link",
+   "label": "Last Used Team",
+   "options": "Team"
+  },
+  {
+   "default": "0",
+   "description": "If checked, team can skip backups for site update",
+   "fieldname": "skip_backups",
+   "fieldtype": "Check",
+   "label": "Allow to skip Backups"
+  },
+  {
+   "fieldname": "parent_team",
+   "fieldtype": "Link",
+   "label": "Parent Team",
+   "options": "Team",
+   "search_index": 1
+  },
+  {
+   "fieldname": "section_break_tdm9",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "child_team_members",
+   "fieldtype": "Table",
+   "label": "Child Team Members",
+   "options": "Child Team Member"
+  },
+  {
+   "fieldname": "team_title",
+   "fieldtype": "Data",
+   "label": "Team Title"
+  },
+  {
+   "default": "0",
+   "fieldname": "self_hosted_servers_enabled",
+   "fieldtype": "Check",
+   "label": "Self Hosted Servers Enabled"
+  },
+  {
+   "fieldname": "account_request",
+   "fieldtype": "Link",
+   "label": "Account Request",
+   "options": "Account Request"
+  },
+  {
+   "default": "0",
+   "description": "SaaS user sees a simplified version of the dashboard",
+   "fieldname": "is_saas_user",
+   "fieldtype": "Check",
+   "label": "Is SaaS User"
+  },
+  {
+   "default": "0",
+   "fieldname": "security_portal_enabled",
+   "fieldtype": "Check",
+   "label": "Security Portal Enabled"
+  },
+  {
+   "default": "0",
+   "fieldname": "benches_enabled",
+   "fieldtype": "Check",
+   "label": "Benches Enabled"
+  },
+  {
+   "default": "0",
+   "fieldname": "code_servers_enabled",
+   "fieldtype": "Check",
+   "label": "Code Servers Enabled"
+  },
+  {
+   "depends_on": "eval: !doc.erpnext_partner",
+   "fieldname": "billing_team",
+   "fieldtype": "Link",
+   "label": "Billing Team",
+   "options": "Team"
+  },
+  {
+   "fieldname": "partner_referral_code",
+   "fieldtype": "Data",
+   "label": "Partner Referral Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "partner_section",
+   "fieldtype": "Section Break",
+   "label": "Partner"
+  },
+  {
+   "depends_on": "eval:!doc.erpnext_partner && doc.partner_email",
+   "fieldname": "partnership_date",
+   "fieldtype": "Date",
+   "label": "Customer Partnership Date"
+  },
+  {
+   "fieldname": "column_break_ppov",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.erpnext_partner",
+   "description": "Fetched from frappe.io",
+   "fieldname": "frappe_partnership_date",
+   "fieldtype": "Date",
+   "label": "Frappe Partnership Date",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "description": "If checked, code server is enabled on created benches.",
+   "fieldname": "is_code_server_user",
+   "fieldtype": "Check",
+   "label": "Is Code Server User"
+  },
+  {
+   "fieldname": "column_break_wejg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "default_to_new_dashboard",
+   "fieldtype": "Check",
+   "label": "Default to New Dashboard"
+  }
+ ],
+ "links": [
+  {
+   "group": "General",
+   "link_doctype": "Release Group",
+   "link_fieldname": "team"
+  },
+  {
+   "group": "General",
+   "link_doctype": "Site",
+   "link_fieldname": "team"
+  },
+  {
+   "group": "General",
+   "link_doctype": "App",
+   "link_fieldname": "team"
+  },
+  {
+   "group": "Billing",
+   "link_doctype": "Invoice",
+   "link_fieldname": "team"
+  },
+  {
+   "group": "Billing",
+   "link_doctype": "Usage Record",
+   "link_fieldname": "team"
+  },
+  {
+   "group": "Billing",
+   "link_doctype": "Subscription",
+   "link_fieldname": "team"
+  },
+  {
+   "group": "Billing",
+   "link_doctype": "Balance Transaction",
+   "link_fieldname": "team"
+  },
+  {
+   "group": "Billing",
+   "link_doctype": "Stripe Webhook Log",
+   "link_fieldname": "team"
+  },
+  {
+   "group": "Marketplace",
+   "link_doctype": "Marketplace App",
+   "link_fieldname": "team"
+  },
+  {
+   "group": "Marketplace",
+   "link_doctype": "Marketplace Publisher Profile",
+   "link_fieldname": "team"
+  }
+ ],
+ "modified": "2024-03-23 14:15:04.526141",
+ "modified_by": "Administrator",
+ "module": "Press",
+ "name": "Team",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Press Admin",
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "user",
+ "track_changes": 1
+}
